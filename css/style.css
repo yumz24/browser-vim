@@ -1,0 +1,64 @@
+:root {
+  /* 背景とベーステキスト */
+  --bg-main: #1f1f28;      /* SumiInk1: 深い背景色 */
+  --fg-main: #dcd7ba;      /* OldWhite: メインの文字色 */
+  
+  /* UIパーツ */
+  --bg-status: #2a2a37;    /* SumiInk3: ステータスライン等 */
+  --bg-selected: #2d4f67;  /* WaveBlue1: 選択範囲やカーソル */
+  
+  /* モード・アクセントカラー (Kanagawaのシグネチャーカラー) */
+  --accent-blue: #7e9cd8;   /* CrystalBlue: Normalモード */
+  --accent-green: #98bb6c;  /* AutumnGreen: Insertモード */
+  --accent-purple: #957fb8; /* OniViolet: Visualモード */
+  --accent-orange: #ffa066; /* SurimiOrange: Replaceモード */
+  --accent-red: #c34043;    /* AutumnRed: Error/Warning */
+  
+  /* レイアウト確認用 */
+  --debug-border: 2px solid #000000; /* 本番時はここを transparent に変えるだけ */
+}
+
+/* test用 */
+header, #workspace, #statusline, #command-line {
+  border: var(--debug-border);
+}
+/* test用 */
+body {
+  margin: 0;
+  overflow: hidden;
+}
+#app {
+  background-color: var(--bg-main);
+  color: var(--fg-main);
+  display: grid;
+  height: 100vh;
+  /* header main footer aside(2行分取っておく) */
+  grid-template-rows: auto 1fr 30px 2.5rem;
+}
+#workspace {
+  overflow: hidden;
+}
+#editor {
+  height: 100%;
+  overflow-y: auto;
+
+  /* フォント設定 */
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 16px;
+  line-height: 1.5;
+}
+#statusline {
+  background-color: var(--bg-status);
+  display: flex;
+  align-items: center; /* 縦方向の中央揃え */
+  justify-content: space-between; /* 左右両端に配置 */
+  padding: 0 10px; /* 文字が端に張り付かないように */
+  font-size: 0.8rem;
+}
+.cursor {
+  /* 変数で幅を制御 */
+  width: var(--cursor-width, 1ch);
+  background-color: var(--cursor-color, var(--fg-main));
+  animation: blink var(--blink-speed, 1s) infinite;
+  /* todo アニメーション等*/
+}

@@ -9,7 +9,14 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <!-- ここにUIを実装する --> 
+  <div id="app">
+    <header><h1>Browser Vim</h1></header>
+    <main id="workspace">
+      <div id="editor" tabindex="0">workspace editor area</div>
+    </main>
+    <footer id="statusline">statusline area</footer>
+    <aside id="command-line" role="status">command-line area</aside>
+  </div>
   <script src="src/main.js"></script>
 </body>
 </html>
