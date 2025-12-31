@@ -55,6 +55,20 @@ body {
   padding: 0 10px; /* 文字が端に張り付かないように */
   font-size: 0.8rem;
 }
+/* ステータスラインの色をモードに合わせて上書き */
+#statusline.mode-normal {
+  background-color: var(--accent-blue);
+  color: var(--bg-main); 
+}
+#statusline.mode-insert {
+  background-color: var(--accent-green);
+  color: var(--bg-main); 
+}
+#statusline.mode-visual {
+  background-color: var(--accent-purple);
+  color: var(--bg-main);
+}
+
 .cursor {
   /* 変数で幅を制御 */
   width: var(--cursor-width, 1ch);
