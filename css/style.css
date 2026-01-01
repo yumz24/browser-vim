@@ -1,78 +1,103 @@
+/* ==========================================================================
+   1. VARIABLES (Theme: Kanagawa)
+   ========================================================================== */
 :root {
-  /* 背景とベーステキスト */
+  /* Base Colors */
   --bg-main: #1f1f28;      /* SumiInk1: 深い背景色 */
   --fg-main: #dcd7ba;      /* OldWhite: メインの文字色 */
   
-  /* UIパーツ */
+  /* UI Components */
   --bg-status: #2a2a37;    /* SumiInk3: ステータスライン等 */
-  --bg-selected: #2d4f67;  /* WaveBlue1: 選択範囲やカーソル */
+  --bg-highlight: #2d2c2d; /* Sumimi: 行のハイライト */
+  --cursor-bg: #c8c093;    /* RoninYellow: カーソル色 */
   
-  /* モード・アクセントカラー (Kanagawaのシグネチャーカラー) */
-  --accent-blue: #7e9cd8;   /* CrystalBlue: Normalモード */
-  --accent-green: #98bb6c;  /* AutumnGreen: Insertモード */
-  --accent-purple: #957fb8; /* OniViolet: Visualモード */
-  --accent-orange: #ffa066; /* SurimiOrange: Replaceモード */
-  --accent-red: #c34043;    /* AutumnRed: Error/Warning */
+  /* Mode Accent Colors */
+  --accent-blue: #7e9cd8;    /* CrystalBlue: Normal */
+  --accent-green: #98bb6c;   /* AutumnGreen: Insert */
+  --accent-purple: #957fb8;  /* OniViolet: Visual */
+  --accent-sakura: #d27399;  /* SakuraPink: Visual Line */
+  --accent-crystal: #7fb4ca; /* LightBlue: Visual Block (少し色味を調整) */
+  --accent-red: #c34043;     /* AutumnRed: Replace / Error */
+  --accent-yellow: #e6c384;  /* CarpYellow: Command */
   
-  /* レイアウト確認用 */
-  --debug-border: 2px solid #000000; /* 本番時はここを transparent に変えるだけ */
+  /* Debugging */
+  --debug-border: transparent; /* 開発時は 2px solid #000 に変更 */
 }
 
-/* test用 */
-header, #workspace, #statusline, #command-line {
-  border: var(--debug-border);
-}
-/* test用 */
+/* ==========================================================================
+   2. GLOBAL STYLES
+   ========================================================================== */
 body {
   margin: 0;
   overflow: hidden;
-}
-#app {
   background-color: var(--bg-main);
   color: var(--fg-main);
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+
+#app {
   display: grid;
   height: 100vh;
-  /* header main footer aside(2行分取っておく) */
+  /* Header / Editor / StatusLine / CommandLine */
   grid-template-rows: auto 1fr 30px 2.5rem;
 }
+
+/* Test/Debug Border - 一括管理 */
+header, #workspace, #statusline, #command-line {
+  border: var(--debug-border);
+}
+
+/* ==========================================================================
+   3. EDITOR AREA
+   ========================================================================== */
 #workspace {
   overflow: hidden;
 }
+
 #editor {
   height: 100%;
   overflow-y: auto;
-
-  /* フォント設定 */
-  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
   font-size: 16px;
   line-height: 1.5;
 }
-#statusline {
-  background-color: var(--bg-status);
-  display: flex;
-  align-items: center; /* 縦方向の中央揃え */
-  justify-content: space-between; /* 左右両端に配置 */
-  padding: 0 10px; /* 文字が端に張り付かないように */
-  font-size: 0.8rem;
+
+.line {
+  white-space: pre;
+  min-height: 1.5em;
+  padding: 0 5px;
 }
-/* ステータスラインの色をモードに合わせて上書き */
-#statusline.mode-normal {
-  background-color: var(--accent-blue);
-  color: var(--bg-main); 
+
+.line.active-line {
+  background-color: var(--bg-highlight);
 }
-#statusline.mode-insert {
-  background-color: var(--accent-green);
-  color: var(--bg-main); 
-}
-#statusline.mode-visual {
-  background-color: var(--accent-purple);
+
+/* Cursor Style */
+.cursor {
+  display: inline-block;
+  width: 1ch;
+  background-color: var(--cursor-bg);
   color: var(--bg-main);
 }
 
-.cursor {
-  /* 変数で幅を制御 */
-  width: var(--cursor-width, 1ch);
-  background-color: var(--cursor-color, var(--fg-main));
-  animation: blink var(--blink-speed, 1s) infinite;
-  /* todo アニメーション等*/
+/* ==========================================================================
+   4. STATUS LINE & MODES
+   ========================================================================== */
+#statusline {
+  background-color: var(--bg-status);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  transition: background-color 0.2s ease; /* モード切替を滑らかに */
 }
+
+/* Mode-Specific Styles (JSで付与されるクラス) */
+#statusline.mode-normal       { background-color: var(--accent-blue);    color: var(--bg-main); }
+#statusline.mode-insert       { background-color: var(--accent-green);   color: var(--bg-main); }
+#statusline.mode-visual       { background-color: var(--accent-purple);  color: var(--bg-main); }
+#statusline.mode-visual-line  { background-color: var(--accent-sakura);  color: var(--bg-main); }
+#statusline.mode-visual-block { background-color: var(--accent-crystal); color: var(--bg-main); }
+#statusline.mode-replace      { background-color: var(--accent-red);     color: var(--bg-main); }
+#statusline.mode-command      { background-color: var(--accent-yellow);  color: var(--bg-main); }
