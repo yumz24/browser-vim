@@ -10,7 +10,7 @@
   --bg-status: #2a2a37;    /* SumiInk3: ステータスライン等 */
   --bg-highlight: #2d2c2d; /* Sumimi: 行のハイライト */
   --cursor-bg: #c8c093;    /* RoninYellow: カーソル色 */
-  
+
   /* Mode Accent Colors */
   --accent-blue: #7e9cd8;    /* CrystalBlue: Normal */
   --accent-green: #98bb6c;   /* AutumnGreen: Insert */
@@ -56,15 +56,50 @@ header, #workspace, #statusline, #command-line {
 
 #editor {
   height: 100%;
-  overflow-y: auto;
-  font-size: 16px;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  font-size: 18px;
   line-height: 1.5;
 }
-
+#ditor::-webkit-scrollbar {
+  display: none;
+}
+#editor {
+  -ms-overflow-style: none;  /* IE, Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+/* 行全体のスタイル */
 .line {
-  white-space: pre;
-  min-height: 1.5em;
-  padding: 0 5px;
+  display: flex;       /* 番号と本文を横並びに */
+  white-space: pre;    /* 空白を維持（typeのインデント用） */
+  min-height: 1.5em;   /* 空行でも高さを確保 */
+  align-items: center; /* 垂直方向の中央揃え（お好みで） */
+  line-height: 1.5;
+}
+/* 行番号エリアのスタイル */
+.line-number {
+  flex-shrink: 0;      /* 横幅を固定 */
+  padding-right: 1rem; /* 文字との間のマージン */
+  text-align: right;   /* 数字を右寄せ */
+  color: #54546d;      /* Kurebi (暗めの色) */
+  user-select: none;   /* コピーされないようにする */
+}
+.fold-column {
+  width: 1.5rem;
+  text-align: center;
+  color: #727169; /* Kurebi */
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.line-number.active-number {
+  color: var(--cursor-bg); /* RoninYellow: 視認性の高い黄色 */
+  font-weight: bold;       /* 少し太くして強調するのもVimらしいです */
+}
+
+/* 本文エリア（必要であれば） */
+.line-content {
+  flex-grow: 1;
+  min-width: 0;
 }
 
 .line.active-line {

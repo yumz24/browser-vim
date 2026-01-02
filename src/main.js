@@ -1,5 +1,5 @@
 /* ==========================================================================
-   1. STATE
+   STATE
    ========================================================================== */
 const state = {
   lines: [
@@ -12,32 +12,126 @@ const state = {
     "type    :help version9<Enter>    for version info", 
   ],
   cursor: { row: 0, col: 0 },
-  mode: 'NORMAL'
+  mode: 'NORMAL',
+  options: {
+    // 0: none, 1: number, 2: relativenumber, 3: hybrid (number + relativenumber)
+    displaynumber: 3,
+    numberwidth: 4,      // 最小の行番号幅は4
+    cursorline: true,    // カレント行の強調
+    foldcolumn: 0,       // 折りたたみカラム 1: 表示, 0: 非表示
+  },
 };
 
 /* ==========================================================================
-   2. RENDERING (表示制御)
+   RENDERING (表示制御)
    ========================================================================== */
+// 一文字分のHTMLを生成する　
+function createCharHtml(char, rowIndex, colIndex) {
+  const isCursor = rowIndex === state.cursor.row && colIndex === state.cursor.col;
+  return `<span class="${isCursor ? 'cursor' : ''}">${char}</span>`;
+}
+
+// 一行分の本文(文字+行末カーソル)のHTMLを生成する
+function createLineContentHtml(line, rowIndex) {
+  const isCurrentRow = rowIndex === state.cursor.row;
+  const chars = line.split('');
+  let contentHtml = chars.map((char, colIndex) => 
+    createCharHtml(char, rowIndex, colIndex)
+  ).join('');
+
+  // 行末/空行のカーソル処理
+  if (isCurrentRow && state.cursor.col >= chars.length) {
+    contentHtml += `<span class="cursor">&nbsp;</span>`;
+  }
+
+  return contentHtml;
+}
+
+// 一行当たりの高さを取得する
+function getLineHeight(editor) {
+  const tempLine = document.createElement('div');
+  tempLine.className = 'line';
+  tempLine.innerHTML = '<span class="line-number">~</span>';
+  editor.appendChild(tempLine);
+  const height = tempLine.offsetHeight;
+  editor.removeChild(tempLine);
+  // 万が一取得できなかった場合のフォールバック
+  return height || 24;
+}
+
+// 画面を埋めるために必要な最商業煤を計算
+function calculateMinRows(editor) {
+  const lineHeight = getLineHeight(editor);
+  // エディタの表示可能領域（内寸）を行高さで割る
+  return Math.floor(editor.clientHeight / lineHeight);
+}
+
+// 設定に基づいて表示すべき行番号のテキストを決定する
+function getLineNumberText(rowIndex, state) {
+  const isDataLine = rowIndex < state.lines.length;
+
+  if (!isDataLine) {
+    return "~";
+  }
+
+  const displaynumber = state.options.displaynumber;
+  const actual = rowIndex + 1;
+  const relative = Math.abs(rowIndex - state.cursor.row);
+
+  switch (displaynumber) {
+    case 1: return actual; // number
+    case 2: return relative; // relativenumber (現在行は0)
+    case 3: // hybrid (現在行だけ絶対、他は相対)
+      return (rowIndex === state.cursor.row) ? actual : relative;
+    default: return "";
+  }
+}
+
+// 折りたたみカラムのHTML生成
+function createFoldColumnHtml(state) {
+  if (state.options.foldcolumn <= 0) return "";
+  // TODO: 現時点では見た目だけなので、いずれロジックを実装する
+  return `<span class="fold-column">-</span>`;
+}
+
 function render() {
   const editor = document.getElementById('editor');
   
-  editor.innerHTML = state.lines.map((line, rowIndex) => {
-    const isCurrentRow = rowIndex === state.cursor.row;
-    const chars = line.split('');
+  const minRows = calculateMinRows(editor);
+  const totalLinesToRender = Math.max(state.lines.length, minRows);
 
-    // 文字の描画
-    const charHtml = chars.map((char, colIndex) => {
-      const isCursor = isCurrentRow && colIndex === state.cursor.col;
-      return `<span class="${isCursor ? 'cursor' : ''}">${char}</span>`;
-    }).join('');
+  // 行番号領域を動的に決定する
+  const numWidth = Math.max(state.options.numberwidth, String(totalLinesToRender).length);
 
-    // 行末/空行のカーソル
-    const isEndCursor = isCurrentRow && state.cursor.col >= chars.length;
-    const endCursorHtml = isEndCursor ? `<span class="cursor">&nbsp;</span>` : '';
-    
-    return `<div class="line ${isCurrentRow ? 'active-line' : ''}">${charHtml}${endCursorHtml}</div>`;
-  }).join('');
+  let finalHtml = "";
 
+  for (let i = 0; i < totalLinesToRender; i++) {
+    const isCurrentRow = i === state.cursor.row;
+
+    // 折りたたみカラム
+    const foldHtml = createFoldColumnHtml(state);
+
+    // 行番号テキストの取得
+    const lineNumberContent = getLineNumberText(i, state);
+    const lineNumberHtml = `
+      <span class="line-number ${isCurrentRow ? 'active-number' : ''}" 
+            style="width: ${numWidth}rem;">
+        ${lineNumberContent}
+      </span>
+    `.replace(/\s+/g, ' ').trim();
+
+    // データがある行は内容を描画、ない行は空
+    const isDataLine = i < state.lines.length;
+    const contentHtml = isDataLine ? createLineContentHtml(state.lines[i], i) : "";
+
+    finalHtml += `
+      <div class="line ${isCurrentRow && state.options.cursorline ? 'active-line' : ''}">
+        ${foldHtml}${lineNumberHtml}<div class="line-content">${contentHtml}</div>
+      </div>
+    `;
+  }
+
+  editor.innerHTML = finalHtml;
   renderStatusLine();
 }
 
@@ -56,7 +150,7 @@ function renderStatusLine() {
 }
 
 /* ==========================================================================
-   3. LOGIC (状態操作)
+   LOGIC (状態操作)
    ========================================================================== */
 
 // 移動ロジックの共通化
@@ -120,7 +214,7 @@ function handleVisualMode(key) {
 }
 
 /* ==========================================================================
-   4. EVENTS (入り口)
+   EVENTS (入り口)
    ========================================================================== */
 window.addEventListener('keydown', (event) => {
   const key = event.key;
