@@ -43,7 +43,7 @@ body {
 }
 
 /* Test/Debug Border - 一括管理 */
-header, #workspace, #statusline, #command-line {
+header, #workspace, #statusline, #commandline {
   border: var(--debug-border);
 }
 
