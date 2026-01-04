@@ -1,0 +1,22 @@
+/**
+ * 表示モード定数
+ */
+const DISPLAY_NUMBER = {
+  NONE: 0,
+  NUMBER: 1,
+  RELATIVE: 2,
+  HYBRID: 3
+};
+
+/**
+ * VIMモード定数
+ */
+const MODE = {
+  NORMAL: 'NORMAL',
+  INSERT: 'INSERT',
+  VISUAL: 'VISUAL',
+  VISUAL_LINE: 'VISUAL LINE',
+  VISUAL_BLOCK: 'VISUAL BLOCK',
+  COMMAND: 'COMMAND',
+  REPLACE: 'REPLACE'
+};

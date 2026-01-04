@@ -15,13 +15,23 @@
       <div id="editor" tabindex="0"></div>
     </main>
     <footer id="statusline"></footer>
-    <aside id="commandline" role="status">commandline area</aside>
+    <aside id="commandline" role="status"></aside>
   </div>
 
-  <script src="src/state.js"></script>
-  <script src="src/helper.js"></script>
-  <script src="src/render.js"></script>
-  <script src="src/keyboard.js"></script>
+  <script src="src/core/const.js"></script>
+  <script src="src/core/state.js"></script>
+
+  <script src="src/core/helper.js"></script>
+
+  <script src="src/modes/command.js"></script>
+  <script src="src/modes/insert.js"></script>
+  <script src="src/modes/normal.js"></script>
+  <script src="src/modes/visual.js"></script>
+
+  <script src="src/ui/render.js"></script>
+
+  <script src="src/engine/inputHandler.js"></script>
+
   <script src="src/main.js"></script>
 </body>
 </html>
