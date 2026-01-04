@@ -94,10 +94,11 @@ function renderStatusLine() {
 function render() {
   const editor = document.getElementById('editor');
   
+  editor.classList.toggle('show-cursorcolumn', state.options.cursorcolumn);
+  editor.style.setProperty('--cursor-col', state.cursor.col);
+
   const minRows = calculateMinRows(editor);
   const totalLinesToRender = Math.max(state.lines.length, minRows);
-
-  // 行番号領域を動的に決定
   const numWidth = Math.max(state.options.numberwidth, String(totalLinesToRender).length);
 
   let finalHtml = "";
@@ -119,7 +120,7 @@ function render() {
 
     finalHtml += `
       <div class="line ${isCurrentRow && state.options.cursorline ? 'active-line' : ''}">
-        ${foldHtml}${lineNumberHtml}<div class="line-content">${contentHtml}</div>
+        ${foldHtml}${lineNumberHtml}<span class="line-content">${contentHtml || ' '}</span>
       </div>
     `;
   }

@@ -11,6 +11,7 @@
  * @property {number} options.displaynumber - 行番号の表示形式（0:非表示, 1:絶対行, 2:相対行, 3:ハイブリッド）
  * @property {number} options.numberwidth - 行番号表示エリアの最小幅
  * @property {boolean} options.cursorline - 現在行をハイライト表示するかどうかのフラグ
+ * @property {boolean} options.cursorcolumn - 現在列をハイライト表示するかどうかのフラグ
  * @property {number} options.foldcolumn - 折りたたみ情報の表示カラム幅
  */
 const state = {
@@ -34,6 +35,7 @@ const state = {
     displaynumber: 3,
     numberwidth: 4,
     cursorline: true,
+    cursorcolumn: true,
     foldcolumn: 0,
   },
 };

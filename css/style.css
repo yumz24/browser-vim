@@ -10,6 +10,9 @@
   --bg-status: #2a2a37;    /* SumiInk3: ステータスライン等 */
   --bg-highlight: #2d2c2d; /* Sumimi: 行のハイライト */
   --cursor-bg: #c8c093;    /* RoninYellow: カーソル色 */
+  --bg-column: rgba(255, 255, 255, 0.05);
+  --char-width: 1ch;
+  --cursor-col: 0;
 
   /* Mode Accent Colors */
   --accent-blue: #7e9cd8;    /* CrystalBlue: Normal */
@@ -100,8 +103,26 @@ header, #workspace, #statusline, #commandline {
 .line-content {
   flex-grow: 1;
   min-width: 0;
+  position: relative;
 }
-
+.line-content::after {
+content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateX(calc(var(--cursor-col) * var(--char-width)));
+  width: var(--char-width);
+  height: 100%;
+  background-color: var(--bg-column);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0; 
+  visibility: hidden;
+}
+.show-cursorcolumn .line-content::after {
+  opacity: 1;
+  visibility: visible;
+}
 .line.active-line {
   background-color: var(--bg-highlight);
 }
