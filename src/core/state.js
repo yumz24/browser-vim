@@ -21,11 +21,11 @@
  * @property {CursorPosition} cursor - 現在のカーソル位置
  * @property {'NORMAL'|'INSERT'|'VISUAL'|'VISUAL LINE'|'VISUAL BLOCK'|'COMMAND'|'REPLACE'} mode - 現在の操作モード
  * @property {string} commandBuffer - コマンドラインモードで入力した際の内容を保持
- * @property {string[]} commandHistory - FIXME
- * @property {string} lastExecutedDisplay - FIXME
- * @property {number} historyIndex - FIXME
- * @property {string} errorMessage - FIXME
- * @property {string} lastErrorMessage - FIXME
+ * @property {string[]} commandHistory - 過去に実行されたコマンドの履歴を保持する配列
+ * @property {string} lastExecutedDisplay - 最後に実行されたコマンド、または検索内容を表示用に保持
+ * @property {number} historyIndex - コマンド履歴を遡る際の現在の参照位置
+ * @property {string} errorMessage - 現在発生しているエラーメッセージ（画面表示用）
+ * @property {string} lastErrorMessage - 直前に発生したエラーメッセージの記録
  * @property {EditorOptions} options - エディタの表示設定
  */
 const state = {
