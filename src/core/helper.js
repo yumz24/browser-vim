@@ -40,3 +40,46 @@ function snapCursorToLine() {
   }
 }
 
+/**
+ * 指定されたキーに基づいてカーソル位置を更新
+ * 行および列の境界チェックを行い、移動先が有効な範囲内に収まるよう制御
+ * @param {string} key - 移動方向を示すキー (h, j, k, l)
+ */
+function moveCursor(key) {
+  const { cursor, lines } = state;
+  const currentLine = lines[cursor.row];
+
+  switch (key) {
+    case 'h': if (cursor.col > 0) cursor.col--; break;
+    case 'j': 
+      if (cursor.row < lines.length - 1) {
+        cursor.row++;
+        snapCursorToLine();
+      }
+      break;
+    case 'k': 
+      if (cursor.row > 0) {
+        cursor.row--;
+        snapCursorToLine();
+      }
+      break;
+    case 'l': 
+      if (cursor.col < currentLine.length - 1) cursor.col++;
+      break;
+  }
+}
+
+
+
+/**
+ * 指定したモードへ安全に遷移し、必要なクリーンアップを行う
+ * @param {string} nextMode - 次のモード (MODE.INSERT など)
+ */
+function transitionTo(nextMode) {
+  // モードが変わる際、古いメッセージやエラーを消去する
+  state.errorMessage = '';
+  state.lastMessage = '';
+  state.commandBuffer = '';
+  state.lastExecutedDisplay = ''; 
+  state.mode = nextMode;
+}

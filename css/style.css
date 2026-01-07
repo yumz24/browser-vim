@@ -1,5 +1,5 @@
 /* ==========================================================================
-   1. VARIABLES (Theme: Kanagawa)
+   VARIABLES (Theme: Kanagawa)
    ========================================================================== */
 :root {
   /* Base Colors */
@@ -28,7 +28,7 @@
 }
 
 /* ==========================================================================
-   2. GLOBAL STYLES
+   GLOBAL STYLES
    ========================================================================== */
 body {
   margin: 0;
@@ -51,7 +51,7 @@ header, #workspace, #statusline, #commandline {
 }
 
 /* ==========================================================================
-   3. EDITOR AREA
+   EDITOR AREA
    ========================================================================== */
 #workspace {
   overflow: hidden;
@@ -136,7 +136,7 @@ content: "";
 }
 
 /* ==========================================================================
-   4. STATUS LINE & MODES
+   STATUS LINE & MODES
    ========================================================================== */
 #statusline {
   background-color: var(--bg-status);
@@ -144,11 +144,32 @@ content: "";
   align-items: center;
   justify-content: space-between;
   padding: 0 10px;
-  font-size: 0.8rem;
+  font-size: 16px;
   font-weight: bold;
   transition: background-color 0.2s ease; /* モード切替を滑らかに */
 }
-
+#commandline {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  font-size: 18px;
+  min-height: 1.5rem;
+  white-space: pre;
+  font-family: monospace;
+}
+#commandline .cursor {
+  background-color: var(--cursor-color, #ffffff);
+  color: #000;
+  display: inline-block;
+  min-width: 0.6em;
+}
+.error-msg {
+  color: #ffffff;
+  background-color : var(--accent-red);
+}
+.info-msg {
+  color: var(--fg-main);
+}
 /* Mode-Specific Styles (JSで付与されるクラス) */
 #statusline.mode-normal       { background-color: var(--accent-blue);    color: var(--bg-main); }
 #statusline.mode-insert       { background-color: var(--accent-green);   color: var(--bg-main); }

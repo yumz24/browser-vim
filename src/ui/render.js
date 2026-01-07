@@ -40,9 +40,9 @@ function getLineNumberText(rowIndex, state) {
   const relative = Math.abs(rowIndex - state.cursor.row);
 
   switch (displaynumber) {
-    case 1: return actual; // number
-    case 2: return relative; // relativenumber (現在行は0)
-    case 3: // hybrid (現在行だけ絶対、他は相対)
+    case DISPLAY_NUMBER.NUMBER: return actual;
+    case DISPLAY_NUMBER.RELATIVE: return relative;
+    case DISPLAY_NUMBER.HYBRID:
       return (rowIndex === state.cursor.row) ? actual : relative;
     default: return "";
   }
@@ -88,6 +88,52 @@ function renderStatusLine() {
 }
 
 /**
+ * 画面下部のコマンドラインを更新
+ * モードやメッセージ、実行履歴の状態に応じて表示内容を切り替える
+ */
+function renderCommandLine() {
+  const commandLineElem = document.getElementById('commandline');
+  commandLineElem.innerHTML = '';
+
+  if (state.mode === MODE.COMMAND) {
+    const prefix = ':';
+    const text = state.commandBuffer;
+    
+    const prefixSpan = document.createElement('span');
+    prefixSpan.textContent = prefix;
+    commandLineElem.appendChild(prefixSpan);
+
+    text.split('').forEach((char, index) => {
+      const span = document.createElement('span');
+      span.textContent = char;
+      if (index === text.length) {
+        span.classList.add('cursor');
+      }
+
+      commandLineElem.appendChild(span);
+    });
+
+    const cursorSpan = document.createElement('span');
+    cursorSpan.innerHTML = '&nbsp';
+    cursorSpan.classList.add('cursor');
+    commandLineElem.appendChild(cursorSpan);
+
+    commandLineElem.className = '';
+  } else if (state.errorMessage) {
+    // エラーがある場合は赤文字などで表示
+    commandLineElem.textContent = state.errorMessage;
+    commandLineElem.className = 'error-msg'; 
+  } else if (state.lastMessage) {
+    // 通常の通知メッセージ
+    commandLineElem.textContent = state.lastMessage;
+    commandLineElem.className = 'info-msg';
+  } else {
+    commandLineElem.textContent = state.lastExecutedDisplay || '';
+    commandLineElem.className = '';
+  }
+}
+
+/**
  * エディタ全体のHTMLを生成および更新
  * 画面サイズに基づいた最小行数の確保と各行のレンダリングを実行
  */
@@ -127,5 +173,6 @@ function render() {
 
   editor.innerHTML = finalHtml;
   renderStatusLine();
+  renderCommandLine();
 }
 
