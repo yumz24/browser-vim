@@ -69,8 +69,6 @@ function moveCursor(key) {
   }
 }
 
-
-
 /**
  * 指定したモードへ安全に遷移し、必要なクリーンアップを行う
  * @param {string} nextMode - 次のモード (MODE.INSERT など)

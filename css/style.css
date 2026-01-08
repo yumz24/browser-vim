@@ -126,7 +126,6 @@ content: "";
 .line.active-line {
   background-color: var(--bg-highlight);
 }
-
 /* Cursor Style */
 .cursor {
   display: inline-block;
